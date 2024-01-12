@@ -90,9 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child:
                 // _user != null ? HomePage(user: _user!) : _googleSignInButton(),
-                _user != null
-                    ? RecommendationPage(user: _user!)
-                    : _googleSignInButton(),
+                _user != null ? IotPage(user: _user!) : _googleSignInButton(),
           );
         });
   }
