@@ -6,6 +6,7 @@ import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:sleeper_flutter/ui/pages/home_page.dart';
 import 'package:sleeper_flutter/ui/pages/iot_pages.dart';
+import 'package:sleeper_flutter/ui/pages/profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -88,7 +89,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child:
                 // _user != null ? HomePage(user: _user!) : _googleSignInButton(),
-                _user != null ? IotPage(user: _user!) : _googleSignInButton(),
+                _user != null
+                    ? ProfilePage(user: _user!)
+                    : _googleSignInButton(),
           );
         });
   }
