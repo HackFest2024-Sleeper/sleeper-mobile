@@ -49,7 +49,7 @@ class _IotPageState extends State<IotPage> {
                   ],
                 ),
                 Divider(thickness: 2),
-                Text('Enable your Wi-Fi and Bluetooth')
+                Text('Please enable your Wi-Fi and Bluetooth')
               ],
             ),
           ),

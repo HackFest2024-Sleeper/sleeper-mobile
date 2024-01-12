@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
@@ -8,12 +6,19 @@ import 'package:sleeper_flutter/ui/pages/home_page.dart';
 import 'package:sleeper_flutter/ui/pages/iot_pages.dart';
 import 'package:sleeper_flutter/ui/pages/profile_page.dart';
 import 'package:sleeper_flutter/ui/pages/recommentadion_page.dart';
+import 'package:sleeper_flutter/ui/pages/sleep_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+}
+
+class MenuSetting {
+  bool bottomBar;
+  Widget page;
+  MenuSetting(this.bottomBar, this.page);
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -38,11 +43,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   BottomBar _bottomBar() {
-    bool showBottomBar = true;
+    List<MenuSetting> menus = [];
+    if (_user != null) {
+      menus.add(MenuSetting(true, HomePage(user: _user!)));
+      menus.add(MenuSetting(true, IotPage(user: _user!)));
+      menus.add(MenuSetting(false, ProfilePage(user: _user!)));
+      menus.add(MenuSetting(true, RecommendationPage(user: _user!)));
+      menus.add(MenuSetting(true, SleepPage(user: _user!)));
+    }
+    int menuIndex = 3; //0 to 4
     return BottomBar(
         barColor: const Color(0xFF403041),
         borderRadius: BorderRadius.circular(60),
-        child: showBottomBar
+        child: menus.isNotEmpty && menus[menuIndex].bottomBar
             ? const SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -78,8 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )
             : SizedBox(
-                height: 1,
-                width: 1,
+                height: 0.1,
+                width: 0.1,
               ),
         body: (context, controller) {
           return Container(
@@ -90,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child:
                 // _user != null ? HomePage(user: _user!) : _googleSignInButton(),
-                _user != null ? IotPage(user: _user!) : _googleSignInButton(),
+                _user != null ? menus[menuIndex].page : _googleSignInButton(),
           );
         });
   }
