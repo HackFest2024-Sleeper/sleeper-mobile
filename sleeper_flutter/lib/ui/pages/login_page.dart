@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       menus.add(MenuSetting(true, RecommendationPage(user: _user!)));
       menus.add(MenuSetting(true, SleepPage(user: _user!)));
     }
-    int menuIndex = 3; //0 to 4
+    int menuIndex = 0; //0 to 4
     return BottomBar(
         barColor: const Color(0xFF403041),
         borderRadius: BorderRadius.circular(60),
