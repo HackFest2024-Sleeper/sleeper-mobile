@@ -11,14 +11,14 @@ class Activity {
       {this.done = false, this.isAI = false, this.alarm = false});
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.user});
+class ActivityPage extends StatefulWidget {
+  const ActivityPage({super.key, required this.user});
   final User user;
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ActivityPage> createState() => _ActivityPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     // Mendapatkan tanggal dan waktu saat ini
@@ -56,6 +56,136 @@ class _HomePageState extends State<HomePage> {
           weekDayList(weekDate, now),
           activityBox(activityList),
         ],
+      ),
+    );
+  }
+
+  Widget profileInfo(User user) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Text(
+            'Good Morning,\n${widget.user.email}',
+            style: const TextStyle(
+                fontSize: 33, fontWeight: FontWeight.w300, color: Colors.white),
+          ),
+          Expanded(
+            child: Container(),
+          ),
+          InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (builder) {
+                  return Dialog(
+                    child: Container(
+                      height: 150,
+                      width: 200,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 30,
+                      ),
+                      child: Column(
+                        children: [
+                          const Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Email"),
+                                  Text("Username"),
+                                  Text("Join date"),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(" : alfar@alfarlab.net"),
+                                  Text(" : alfar"),
+                                  Text(" : Dec, 24, 2024"),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF403041),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 0,
+                              ),
+                            ),
+                            child: const Text(
+                              'Sign Out',
+                              style: TextStyle(color: Color(0xFFF5F5F5)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Icon(
+              Icons.person_2_outlined,
+              size: 37,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget weekDayList(List<List<Object>> weekDate, DateTime now) {
+    return SizedBox(
+      width: double.infinity,
+      height: 66,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: List.generate(7, (index) {
+          return Container(
+            width: 42,
+            height: 66,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: weekDate[index][0] == now.day
+                  ? const Color(0xFF6750A4)
+                  : const Color(0xFFFEF7FF),
+            ),
+            child: Container(
+              margin: const EdgeInsets.only(top: 10),
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  Text(
+                    "${weekDate[index][0]}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1D1B20),
+                    ),
+                  ),
+                  Text(
+                    "${weekDate[index][1]}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1D1B20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -232,136 +362,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget weekDayList(List<List<Object>> weekDate, DateTime now) {
-    return SizedBox(
-      width: double.infinity,
-      height: 66,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: List.generate(7, (index) {
-          return Container(
-            width: 42,
-            height: 66,
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: weekDate[index][0] == now.day
-                  ? const Color(0xFF6750A4)
-                  : const Color(0xFFFEF7FF),
-            ),
-            child: Container(
-              margin: const EdgeInsets.only(top: 10),
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                    "${weekDate[index][0]}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1D1B20),
-                    ),
-                  ),
-                  Text(
-                    "${weekDate[index][1]}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1D1B20),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget profileInfo(User user) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Text(
-            'Good Morning,\n${widget.user.email}',
-            style: const TextStyle(
-                fontSize: 33, fontWeight: FontWeight.w300, color: Colors.white),
-          ),
-          Expanded(
-            child: Container(),
-          ),
-          InkWell(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (builder) {
-                  return Dialog(
-                    child: Container(
-                      height: 150,
-                      width: 200,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 30,
-                      ),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Email"),
-                                  Text("Username"),
-                                  Text("Join date"),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(" : alfar@alfarlab.net"),
-                                  Text(" : alfar"),
-                                  Text(" : Dec, 24, 2024"),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF403041),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 0,
-                              ),
-                            ),
-                            child: const Text(
-                              'Sign Out',
-                              style: TextStyle(color: Color(0xFFF5F5F5)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            child: const Icon(
-              Icons.person_2_outlined,
-              size: 37,
-              color: Colors.white,
-            ),
-          )
         ],
       ),
     );
