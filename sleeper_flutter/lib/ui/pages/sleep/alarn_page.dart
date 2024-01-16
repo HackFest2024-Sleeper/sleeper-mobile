@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class AlarmPage extends StatefulWidget {
   const AlarmPage({super.key});
@@ -11,6 +12,12 @@ class AlarmPage extends StatefulWidget {
 class _AlarmPageState extends State<AlarmPage> {
   @override
   Widget build(BuildContext context) {
+    String nowTimeString = DateFormat('HH:mm').format(DateTime.now());
+    DateTime nowTime = DateFormat("HH:mm").parse(nowTimeString);
+    DateTime alarmTime = DateFormat("HH:mm").parse("06:00");
+    Duration difference = alarmTime.difference(nowTime);
+    var toAlarm = DateFormat("HH:mm").format(nowTime.subtract(difference));
+    print(toAlarm);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -40,7 +47,7 @@ class _AlarmPageState extends State<AlarmPage> {
               ),
             ),
             Text(
-              '12:00',
+              '${nowTimeString}',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 80,
@@ -52,20 +59,35 @@ class _AlarmPageState extends State<AlarmPage> {
               width: 170,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF6750A4)),
+                  backgroundColor: Color(0xFF6750A4),
+                ),
                 onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.alarm,
-                      color: Colors.white,
-                    ),
-                    Text(
-                      'Alarm at 06:00',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.alarm,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            'Alarm at 06:00',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Automatic',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
