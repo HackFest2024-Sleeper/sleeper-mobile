@@ -108,16 +108,16 @@ class _LoginPageState extends State<LoginPage> {
                   //     size: menuIndex == 3 ? 60 : 42,
                   //   ),
                   // ),
-                  InkWell(
-                    onTap: () {
-                      changePage(4);
-                    },
-                    child: Icon(
-                      Icons.history,
-                      color: Color(0xFFF5F5F5),
-                      size: menuIndex == 4 ? 60 : 42,
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     changePage(4);
+                  //   },
+                  //   child: Icon(
+                  //     Icons.history,
+                  //     color: Color(0xFFF5F5F5),
+                  //     size: menuIndex == 4 ? 60 : 42,
+                  //   ),
+                  // ),
                 ],
               ),
             )
