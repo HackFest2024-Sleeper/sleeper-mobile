@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sleeper_flutter/ui/pages/sleep/alarn_page.dart';
 
 class SleepPage extends StatefulWidget {
   const SleepPage({super.key, required this.user});
@@ -183,7 +184,14 @@ class _SleepPageState extends State<SleepPage> {
                   borderRadius: BorderRadius.circular(40),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (contex) => AlarmPage(),
+                  ),
+                );
+              },
               child: const SizedBox(
                 width: 100,
                 height: 120,
