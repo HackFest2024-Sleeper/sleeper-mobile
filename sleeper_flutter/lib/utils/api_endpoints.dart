@@ -15,6 +15,10 @@ class _APIEndpoints {
   final String getAllExercises = 'exercises';
   final String getOneExercise = 'exercises/:id';
 
+  final String inputDailyActivities = 'activities/daily';
+  final String getAllDailyActivities = 'activities/daily';
+  final String getOneDailyActivities = 'activities/daily/:id';
+
   final String getAllFeedbacks = 'feedbacks';
   final String getOneFeedback = 'feedbacks/:id';
 
@@ -24,5 +28,5 @@ class _APIEndpoints {
   final String getFoodRecommendations = 'recommendations/food';
   final String getExerciseReccomendations = 'recommendations/exercise';
 
-  final String updateDataDevice = 'devices';
+  final String updateDataDevice = 'devices/smart-lamp';
 }
