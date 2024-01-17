@@ -6,16 +6,13 @@ import 'package:sleeper_flutter/models/users.dart';
 import 'package:sleeper_flutter/utils/api_endpoints.dart';
 
 class AuthController extends GetxController {
-  Future register(String uid, String name, String email, String token) async {
+  Future register(String uid, String name, String email) async {
     try {
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Content-Type': 'application/json'};
 
       var url =
           Uri.parse(APIEndpoints.baseUrl + APIEndpoints.apiEndpoints.register);
-
+ 
       Map body = {
         'uid': uid,
         'fullName': name,
@@ -48,16 +45,17 @@ class AuthController extends GetxController {
         throw jsonDecode(responseBody['msg']) ?? "Unknown error occured";
       }
     } catch (e) {
-      Get.back();
-      FlutterMaterial.showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return FlutterMaterial.SimpleDialog(
-              title: const FlutterMaterial.Text("error"),
-              contentPadding: const FlutterMaterial.EdgeInsets.all(20),
-              children: [FlutterMaterial.Text(e.toString())],
-            );
-          });
+      print("EROR MESSAGE: $e");
+      // Get.back();
+      // FlutterMaterial.showDialog(
+      //     context: Get.context!,
+      //     builder: (context) {
+      //       return FlutterMaterial.SimpleDialog(
+      //         title: const FlutterMaterial.Text("error"),
+      //         contentPadding: const FlutterMaterial.EdgeInsets.all(20),
+      //         children: [FlutterMaterial.Text(e.toString())],
+      //       );
+      //     });
     }
   }
 }

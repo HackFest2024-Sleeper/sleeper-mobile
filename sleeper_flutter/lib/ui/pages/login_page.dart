@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:get/get.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:sleeper_flutter/controllers/auth_controller.dart';
 import 'package:sleeper_flutter/ui/pages/activity/activity_page.dart';
 import 'package:sleeper_flutter/ui/pages/iot/iot_pages.dart';
 import 'package:sleeper_flutter/ui/pages/activity/profile_page.dart';
@@ -22,6 +24,7 @@ class MenuSetting {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthController authController = Get.put(AuthController());
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   int menuIndex = 0;
@@ -149,10 +152,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleGoogleSignIn() {
+  void _handleGoogleSignIn() async {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      _auth.signInWithProvider(googleAuthProvider);
+      UserCredential userCredential =
+          await _auth.signInWithProvider(googleAuthProvider);
+
+      await authController.register(
+          userCredential.user!.uid,
+          userCredential.user!.displayName ?? "",
+          userCredential.user!.email ?? "");
     } catch (error) {
       print(error);
     }
