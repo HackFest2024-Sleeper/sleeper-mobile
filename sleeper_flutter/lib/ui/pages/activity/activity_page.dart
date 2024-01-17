@@ -54,7 +54,7 @@ class _ActivityPageState extends State<ActivityPage> {
       weekDate[i][0] = weekStart.add(Duration(days: i)).day;
     }
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
       child: Column(
         children: [
           profileInfo(widget.user, widget.auth),
@@ -168,7 +168,7 @@ class _ActivityPageState extends State<ActivityPage> {
         scrollDirection: Axis.horizontal,
         children: List.generate(7, (index) {
           return Container(
-            width: 42,
+            width: 40,
             height: 66,
             margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(

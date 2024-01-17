@@ -14,11 +14,12 @@ class _IotPageState extends State<IotPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(36),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Device',
+            'Your devices',
             style: TextStyle(
               fontSize: 33,
               fontWeight: FontWeight.w300,

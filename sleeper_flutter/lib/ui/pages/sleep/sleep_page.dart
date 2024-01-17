@@ -15,20 +15,12 @@ class _SleepPageState extends State<SleepPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(37.0),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Sleep",
-            style: TextStyle(
-              fontSize: 33,
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-            ),
-          ),
-          const Text(
-            "Setting",
+            "Sleep Setting",
             style: TextStyle(
               fontSize: 33,
               fontWeight: FontWeight.w300,

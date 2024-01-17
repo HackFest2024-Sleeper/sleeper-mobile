@@ -211,14 +211,15 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  setState(
-                    () {
-                      saveActivity();
-                    },
-                  );
-                },
-                child: const Text('Save')),
+              onPressed: () {
+                setState(
+                  () {
+                    saveActivity();
+                  },
+                );
+              },
+              child: const Text('Save'),
+            ),
           ],
         ),
       ),
