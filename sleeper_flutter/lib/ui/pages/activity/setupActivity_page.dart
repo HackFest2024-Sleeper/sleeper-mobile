@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:sleeper_flutter/controllers/activity_controller.dart';
+import 'package:sleeper_flutter/controllers/recommendation_controller.dart';
 import 'package:sleeper_flutter/models/user_activities_model.dart';
 
 class SetupActivityPage extends StatefulWidget {
@@ -14,6 +15,8 @@ class SetupActivityPage extends StatefulWidget {
 
 class _SetupActivityPageState extends State<SetupActivityPage> {
   ActivityController activityController = Get.put(ActivityController());
+  RecommendationController recommendationController =
+      Get.put(RecommendationController());
   static String dateOnly(DateTime date) {
     return "${date.year}-${date.month}-${date.day}";
   }
@@ -136,7 +139,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
     super.dispose();
   }
 
-  Future<void> saveActivity() async {
+  Future<void> createRecommendationBasedActivities() async {
     // if (activityList.isNotEmpty) {
     //   FirebaseFirestore db = FirebaseFirestore.instance;
     //   var data = UserActivitiesModel(
@@ -150,8 +153,19 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
     //       .catchError((error) => print("Failed to add user: $error"));
     // }
 
-    print('save');
-    Navigator.pop(context);
+    try {
+      DateTime date = DateTime.now();
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      print('save');
+      await recommendationController.createActivitiesRecommendation(
+        uid,
+        date,
+      );
+      print('done');
+      Navigator.pop(context);
+    } catch (e) {
+      print("Error creating recommendation: $e");
+    }
   }
 
   bool isNumeric(String s) {
@@ -268,7 +282,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
               onPressed: () {
                 setState(
                   () {
-                    saveActivity();
+                    createRecommendationBasedActivities();
                   },
                 );
               },

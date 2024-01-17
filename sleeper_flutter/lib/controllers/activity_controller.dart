@@ -1,8 +1,8 @@
+// ignore_for_file: unused_local_variable, avoid_print
+
 import 'dart:convert';
-import 'package:flutter/material.dart' as FlutterMaterial;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:sleeper_flutter/models/activities.dart';
 import 'package:sleeper_flutter/utils/api_endpoints.dart';
 
 class ActivityController extends GetxController {

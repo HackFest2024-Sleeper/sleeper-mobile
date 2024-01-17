@@ -31,7 +31,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Future<void> _fetchActivities() async {
     try {
       // String? token = await FirebaseAuth.instance.currentUser!.getIdToken(true);
-      String uid = await FirebaseAuth.instance.currentUser!.uid;
+      String uid = FirebaseAuth.instance.currentUser!.uid;
       // Assuming getActivitiesRecommendation returns a List<Activity>
       List<String> apiActivities =
           await recommendationController.getActivitiesRecommendation(
