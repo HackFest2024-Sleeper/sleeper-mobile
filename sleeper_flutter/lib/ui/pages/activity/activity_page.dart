@@ -72,7 +72,7 @@ class _ActivityPageState extends State<ActivityPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Good Morning,\n${widget.user.email}',
+            'Good Morning,\n${widget.user.email!.split('@')[0]}',
             style: const TextStyle(
                 fontSize: 33, fontWeight: FontWeight.w300, color: Colors.white),
           ),
