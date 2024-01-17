@@ -28,16 +28,4 @@ class Exercise {
       image: json['image'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'category': category,
-      'description': description,
-      'duration': duration,
-      'repetitions': repetitions,
-      'sets': sets,
-      'image': image,
-    };
-  }
 }

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeper_flutter/controllers/activity_controller.dart';
 import 'package:sleeper_flutter/models/user_activities_model.dart';
 
 class SetupActivityPage extends StatefulWidget {
@@ -11,32 +13,84 @@ class SetupActivityPage extends StatefulWidget {
 }
 
 class _SetupActivityPageState extends State<SetupActivityPage> {
+  ActivityController activityController = Get.put(ActivityController());
   static String dateOnly(DateTime date) {
     return "${date.year}-${date.month}-${date.day}";
   }
 
   final String date = dateOnly(DateTime.now());
 
-  bool isButtonDisabled = true;
+  bool isButtonDisabled = false;
   bool fixedTime = true;
-  List<Activity> activityList = [];
-  Activity tempActivity = Activity("", "", 0, 0);
+  List<dynamic> activityList = [];
+  Activity tempActivity = Activity(
+      name: "name",
+      priority: 0,
+      duration: 0,
+      date: DateTime.now(),
+      time: "time");
   final TextEditingController activityNameController = TextEditingController();
   final TextEditingController activityDurationController =
       TextEditingController();
   final TextEditingController activityPriorityController =
       TextEditingController();
 
-  void addActivity(Activity act) {
-    setState(() {
-      activityList.add(act);
-      print(activityList);
-      tempActivity = Activity("", "", 0, 0);
+  Future<void> addActivity() async {
+    try {
+      DateTime date = DateTime.now();
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      print("UID1: $uid");
+      await activityController.inputDailyActivity(
+        activityNameController.text,
+        activityDurationController.text,
+        activityPriorityController.text,
+        date,
+        uid,
+      );
+
       activityNameController.clear();
       activityDurationController.clear();
       activityPriorityController.clear();
-    });
+
+      print("CALLING");
+      // Call fetchActivities after adding the activity
+      await fetchActivities(uid, date);
+
+      // Use Navigator to pop the current screen
+      Navigator.pop(context);
+    } catch (e) {
+      print("FAILED: $e");
+    }
   }
+
+  Future<void> fetchActivities(String uid, DateTime date) async {
+    try {
+      print("UID2: $uid");
+      List<dynamic> activities = await activityController.getAllDailyActivities(
+        date,
+        uid,
+      );
+
+      setState(() {
+        // Update the local activityList with data from the API response
+        activityList = activities;
+        print("DONE: $activityList");
+      });
+    } catch (e) {
+      print("Error fetching activities: $e");
+    }
+  }
+
+  // void addActivitys(Activity act) {
+  //   setState(() {
+  //     activityList.add(act);
+  //     print(activityList);
+  //     tempActivity = Activity("Test", 0, 0, "18:00");
+  //     activityNameController.clear();
+  //     activityDurationController.clear();
+  //     activityPriorityController.clear();
+  //   });
+  // }
 
   void updateButton() {
     isButtonDisabled = activityNameController.text.isEmpty ||
@@ -49,16 +103,15 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
   @override
   void initState() {
     super.initState();
+    fetchActivities(widget.user.uid, DateTime.now());
     activityNameController.addListener(
       () {
-        print('listener');
         final String activityNameText = activityNameController.text;
-        tempActivity.desc = activityNameText;
+        tempActivity.name = activityNameText;
       },
     );
     activityDurationController.addListener(
       () {
-        print('listener');
         final String activityDurationText = activityDurationController.text;
         isNumeric(activityDurationText)
             ? tempActivity.duration = int.parse(activityDurationText)
@@ -67,7 +120,6 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
     );
     activityPriorityController.addListener(
       () {
-        print('listener');
         final String activityPriorityText = activityPriorityController.text;
         isNumeric(activityPriorityText)
             ? tempActivity.priority = int.parse(activityPriorityText)
@@ -84,19 +136,20 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
     super.dispose();
   }
 
-  void saveActivity() {
-    if (activityList.isNotEmpty) {
-      FirebaseFirestore db = FirebaseFirestore.instance;
-      var data = UserActivitiesModel(
-        widget.user.uid,
-        date,
-        activityList,
-      ).toJson();
-      db
-          .collection('UserActivities')
-          .add(data)
-          .catchError((error) => print("Failed to add user: $error"));
-    }
+  Future<void> saveActivity() async {
+    // if (activityList.isNotEmpty) {
+    //   FirebaseFirestore db = FirebaseFirestore.instance;
+    //   var data = UserActivitiesModel(
+    //     widget.user.uid,
+    //     date,
+    //     activityList,
+    //   ).toJson();
+    //   db
+    //       .collection('UserActivities')
+    //       .add(data)
+    //       .catchError((error) => print("Failed to add user: $error"));
+    // }
+
     print('save');
     Navigator.pop(context);
   }
@@ -107,9 +160,9 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    activityList.length > 1
-        ? activityList.sort((a, b) => a.time.compareTo(b.time))
-        : null;
+    // activityList.length > 1
+    //     ? activityList.sort((a, b) => a.time!.compareTo(b.time))
+    //     : null;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -173,11 +226,12 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
                     child: ListView.builder(
                       itemCount: activityList.length,
                       itemBuilder: (context, index) {
+                        final dynamic activityData = activityList[index];
                         return Row(
                           children: [
                             Expanded(
                               child: Text(
-                                activityList[index].desc,
+                                activityData['name'],
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -187,7 +241,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
                             ),
                             const SizedBox(width: 2),
                             Text(
-                              '${activityList[index].duration} min',
+                              '${activityData['duration']} min',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -195,7 +249,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
                               ),
                             ),
                             Text(
-                              ', Priority: ${activityList[index].priority}',
+                              ', Priority: ${activityData['priority']}',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -319,14 +373,11 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
                       //   ],
                       // ),
                       ElevatedButton(
-                        onPressed: isButtonDisabled
-                            ? null
-                            : () {
-                                setState(() {
-                                  Navigator.pop(context);
-                                  addActivity(tempActivity);
-                                });
-                              },
+                        onPressed: () {
+                          setState(() {
+                            addActivity();
+                          });
+                        },
                         child: const Text('Add Activity'),
                       ),
                     ],

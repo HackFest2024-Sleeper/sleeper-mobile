@@ -19,13 +19,4 @@ class Food {
       image: json['image'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'category': category,
-      'description': description,
-      'image': image,
-    };
-  }
 }

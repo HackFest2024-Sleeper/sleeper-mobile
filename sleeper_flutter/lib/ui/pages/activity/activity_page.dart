@@ -2,18 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:sleeper_flutter/controllers/recommendation_controller.dart';
 import 'package:sleeper_flutter/ui/pages/activity/profile_page.dart';
 import 'package:sleeper_flutter/ui/pages/activity/setupActivity_page.dart';
-
-class Activity {
-  String time;
-  String desc;
-  bool done;
-  bool isAI;
-  bool alarm;
-  Activity(this.time, this.desc,
-      {this.done = false, this.isAI = false, this.alarm = false});
-}
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key, required this.user, required this.auth});
@@ -24,6 +16,38 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
+  RecommendationController recommendationController =
+      Get.put(RecommendationController());
+
+  List<String> activityList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the method to get activities from the API in initState
+    _fetchActivities();
+  }
+
+  Future<void> _fetchActivities() async {
+    try {
+      // String? token = await FirebaseAuth.instance.currentUser!.getIdToken(true);
+      String uid = await FirebaseAuth.instance.currentUser!.uid;
+      // Assuming getActivitiesRecommendation returns a List<Activity>
+      List<String> apiActivities =
+          await recommendationController.getActivitiesRecommendation(
+        DateTime.now(),
+        uid,
+      );
+
+      setState(() {
+        // Update the local activityList with data from the API response
+        activityList = apiActivities;
+      });
+    } catch (e) {
+      print("Error fetching activities: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Mendapatkan tanggal dan waktu saat ini
@@ -36,15 +60,6 @@ class _ActivityPageState extends State<ActivityPage> {
       [0, 'Sat'],
       [0, 'Sun']
     ];
-    List<Activity> activityList = [];
-    activityList.add(Activity('07:00', 'Makan'));
-    activityList.add(
-        Activity('21:00', 'Berjemur', done: true, isAI: true, alarm: true));
-    activityList.add(Activity('22:00', 'Belajar Dart'));
-    activityList.add(Activity('23:00', 'Istirahat'));
-    activityList.add(Activity('08:00', 'Olahraga Pagi', isAI: true));
-    activityList.add(Activity('09:00', 'Bekerja'));
-    activityList.sort((a, b) => a.time.compareTo(b.time));
 
     DateTime now = DateTime.now();
     DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
@@ -72,7 +87,7 @@ class _ActivityPageState extends State<ActivityPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Good Morning,\n${widget.user.email!.split('@')[0]}',
+            'Hello,\n${widget.user.email!.split('@')[0]}',
             style: const TextStyle(
                 fontSize: 33, fontWeight: FontWeight.w300, color: Colors.white),
           ),
@@ -207,7 +222,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Widget activityBox(List<Activity> activityList, user) {
+  Widget activityBox(List<String> activityList, user) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 20),
@@ -216,8 +231,8 @@ class _ActivityPageState extends State<ActivityPage> {
         color: const Color(0xB2FFFFFF),
       ),
       child: activityList.isNotEmpty
-          ? activityBoxUnlisted(user)
-          : activityBoxListed(activityList),
+          ? activityBoxListed(activityList)
+          : activityBoxUnlisted(user),
     );
   }
 
@@ -247,7 +262,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Widget activityBoxListed(List<Activity> activityList) {
+  Widget activityBoxListed(List<String> activityList) {
     return Column(
       children: [
         Padding(
@@ -317,30 +332,36 @@ class _ActivityPageState extends State<ActivityPage> {
             itemBuilder: (context, index) {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
-                value: activityList[index].done,
+                // value: activityList[index].done,
+                value: true,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "${activityList[index].time}, ${activityList[index].desc}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: activityList[index].isAI
-                            ? Colors.green
-                            : const Color(0xFF1D1B20),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 150,
+                      child: Text(
+                        // "${activityList[index].time}, ${activityList[index].desc}",
+                        "${activityList[index]}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          // color: activityList[index].isAI
+                          //     ? Colors.green
+                          //     : const Color(0xFF1D1B20),
+                        ),
                       ),
-                    ),
-                    activityList[index].alarm
-                        ? const Icon(Icons.alarm_on_outlined,
-                            color: Color(0xFF6750A4))
-                        : const Icon(Icons.alarm_off_outlined)
+                    )
+
+                    // activityList[index].alarm
+                    //     ? const Icon(Icons.alarm_on_outlined,
+                    //         color: Color(0xFF6750A4))
+                    //     : const Icon(Icons.alarm_off_outlined)
                   ],
                 ),
                 onChanged: (bool? value) {
                   setState(
                     () {
-                      activityList[index].done = value!;
+                      // activityList[index].done = value!;
                     },
                   );
                 },

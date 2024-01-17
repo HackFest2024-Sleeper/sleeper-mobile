@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart' as FlutterMaterial;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:sleeper_flutter/models/users.dart';
@@ -46,16 +45,6 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       print("EROR MESSAGE: $e");
-      // Get.back();
-      // FlutterMaterial.showDialog(
-      //     context: Get.context!,
-      //     builder: (context) {
-      //       return FlutterMaterial.SimpleDialog(
-      //         title: const FlutterMaterial.Text("error"),
-      //         contentPadding: const FlutterMaterial.EdgeInsets.all(20),
-      //         children: [FlutterMaterial.Text(e.toString())],
-      //       );
-      //     });
     }
   }
 }

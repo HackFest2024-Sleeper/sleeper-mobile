@@ -3,7 +3,7 @@
 class APIEndpoints {
   static final String baseUrl =
       'https://sleeper-api-n4waezcoha-et.a.run.app/api/';
-  static _APIEndpoints authEndPoints = _APIEndpoints();
+  static _APIEndpoints apiEndpoints = _APIEndpoints();
 }
 
 class _APIEndpoints {
