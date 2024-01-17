@@ -3,8 +3,7 @@ class Activity {
   final int priority;
   final int duration;
   final DateTime date;
-  final String time;
-  final int userId;
+  final String? time;
 
   Activity({
     required this.name,
@@ -12,7 +11,6 @@ class Activity {
     required this.duration,
     required this.date,
     required this.time,
-    required this.userId,
   });
 
   factory Activity.fromJson(Map<String, dynamic> json) {
@@ -20,20 +18,8 @@ class Activity {
       name: json['name'],
       priority: json['priority'],
       duration: json['duration'],
-      date: DateTime.parse(json['date']),
+      date: json['date'],
       time: json['time'],
-      userId: json['userId'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'priority': priority,
-      'duration': duration,
-      'date': date.toIso8601String(),
-      'time': time,
-      'userId': userId,
-    };
   }
 }
