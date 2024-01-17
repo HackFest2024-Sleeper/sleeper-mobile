@@ -77,16 +77,6 @@ class ActivityController extends GetxController {
       }
     } catch (e) {
       print("ERROR: $e");
-      // Get.back();
-      // FlutterMaterial.showDialog(
-      //     context: Get.context!,
-      //     builder: (context) {
-      //       return FlutterMaterial.SimpleDialog(
-      //         title: const FlutterMaterial.Text("error"),
-      //         contentPadding: const FlutterMaterial.EdgeInsets.all(20),
-      //         children: [FlutterMaterial.Text(e.toString())],
-      //       );
-      //     });
     }
   }
 }

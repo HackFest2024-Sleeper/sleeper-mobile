@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:sleeper_flutter/controllers/device_controller.dart';
 
 class BulbPage extends StatefulWidget {
   const BulbPage({super.key});
@@ -9,6 +12,23 @@ class BulbPage extends StatefulWidget {
 }
 
 class _BulbPageState extends State<BulbPage> {
+  DeviceController deviceController = Get.put(DeviceController());
+  bool isAutomaticMode = false; // Added variable for automatic mode
+
+  Future<void> updateStatusDevice(String status) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      print("UID $uid");
+      print("STATUS: $status");
+      await deviceController.updateSmartLampStatus(
+        status,
+        uid,
+      );
+    } catch (e) {
+      print("FAILED: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +66,7 @@ class _BulbPageState extends State<BulbPage> {
                   color: Colors.white),
             ),
             SleekCircularSlider(
-              initialValue: 30,
+              initialValue: 50,
               min: 0,
               max: 100,
               appearance: CircularSliderAppearance(
@@ -98,14 +118,21 @@ class _BulbPageState extends State<BulbPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Automatic',
+                            isAutomaticMode ? 'On' : 'Off',
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           Switch(
-                            value: true,
-                            onChanged: (value) {},
+                            value: isAutomaticMode,
+                            onChanged: (value) {
+                              setState(() {
+                                isAutomaticMode = value;
+                                // Call the function to update the status
+                                updateStatusDevice(
+                                    isAutomaticMode ? 'On' : 'Off');
+                              });
+                            },
                           ),
                         ],
                       ),
