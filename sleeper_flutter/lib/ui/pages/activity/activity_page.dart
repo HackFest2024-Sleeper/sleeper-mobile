@@ -19,7 +19,7 @@ class _ActivityPageState extends State<ActivityPage> {
   RecommendationController recommendationController =
       Get.put(RecommendationController());
   bool onLoading = false;
-  List<String> activityList = [];
+  List<List<dynamic>> activityList = [];
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _ActivityPageState extends State<ActivityPage> {
         for (String item in apiActivities) {
           List<String> parts = item.split('. ');
           String newItem = parts.sublist(1).join(', ');
-          activityList.add(newItem);
+          activityList.add([false, newItem]);
         }
         onLoading = false;
       });
@@ -234,7 +234,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Widget activityBox(List<String> activityList, user) {
+  Widget activityBox(List<dynamic> activityList, user) {
     return onLoading
         ? Center(heightFactor: 10, child: CircularProgressIndicator())
         : Container(
@@ -276,7 +276,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Widget activityBoxListed(List<String> activityList) {
+  Widget activityBoxListed(List<dynamic> activityList) {
     return Column(
       children: [
         Padding(
@@ -347,21 +347,27 @@ class _ActivityPageState extends State<ActivityPage> {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 // value: activityList[index].done,
-                value: true,
+                value: activityList[index][0],
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      // "${activityList[index].time}, ${activityList[index].desc}",
-                      activityList[index],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        // color: activityList[index].isAI
-                        //     ? Colors.green
-                        //     : const Color(0xFF1D1B20),
+                    Expanded(
+                      child: Text(
+                        // "${activityList[index].time}, ${activityList[index].desc}",
+                        activityList[index][1],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          // color: activityList[index].isAI
+                          //     ? Colors.green
+                          //     : const Color(0xFF1D1B20),
+                        ),
                       ),
-                    )
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Icon(Icons.auto_awesome),
+                    ),
 
                     // activityList[index].alarm
                     //     ? const Icon(Icons.alarm_on_outlined,
@@ -372,7 +378,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 onChanged: (bool? value) {
                   setState(
                     () {
-                      // activityList[index].done = value!;
+                      activityList[index][0] = value;
                     },
                   );
                 },
