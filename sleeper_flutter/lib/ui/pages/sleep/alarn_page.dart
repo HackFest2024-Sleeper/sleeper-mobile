@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ class AlarmPage extends StatefulWidget {
 }
 
 class _AlarmPageState extends State<AlarmPage> {
+  TimeOfDay selectedTime = TimeOfDay.now();
   @override
   Widget build(BuildContext context) {
     String nowTimeString = DateFormat('HH:mm').format(DateTime.now());
@@ -61,7 +63,56 @@ class _AlarmPageState extends State<AlarmPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF6750A4),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  final TimeOfDay? timeOfDay = await showTimePicker(
+                    context: context,
+                    initialTime: selectedTime,
+                    initialEntryMode: TimePickerEntryMode.inputOnly,
+                    builder: (context, child) {
+                      return MediaQuery(
+                        data: MediaQuery.of(context)
+                            .copyWith(alwaysUse24HourFormat: true),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            child!,
+                            Dialog(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 64,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text('or'),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: double.infinity,
+                                        child: const Text('Set automatic'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                  if (timeOfDay != null) {
+                    setState(() {
+                      selectedTime = timeOfDay;
+                    });
+                  }
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Column(
@@ -74,7 +125,7 @@ class _AlarmPageState extends State<AlarmPage> {
                             color: Colors.white,
                           ),
                           Text(
-                            'Alarm at 06:00',
+                            'Alarm at ${selectedTime.hour}:${selectedTime.minute}',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
