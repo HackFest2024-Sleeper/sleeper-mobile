@@ -18,7 +18,7 @@ class ActivityPage extends StatefulWidget {
 class _ActivityPageState extends State<ActivityPage> {
   RecommendationController recommendationController =
       Get.put(RecommendationController());
-
+  bool onLoading = false;
   List<String> activityList = [];
 
   @override
@@ -30,6 +30,9 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Future<void> _fetchActivities() async {
     try {
+      setState(() {
+        onLoading = true;
+      });
       // String? token = await FirebaseAuth.instance.currentUser!.getIdToken(true);
       String uid = FirebaseAuth.instance.currentUser!.uid;
       // Assuming getActivitiesRecommendation returns a List<Activity>
@@ -41,9 +44,17 @@ class _ActivityPageState extends State<ActivityPage> {
 
       setState(() {
         // Update the local activityList with data from the API response
-        activityList = apiActivities;
+        for (String item in apiActivities) {
+          List<String> parts = item.split('. ');
+          String newItem = parts.sublist(1).join(', ');
+          activityList.add(newItem);
+        }
+        onLoading = false;
       });
     } catch (e) {
+      setState(() {
+        onLoading = false;
+      });
       print("Error fetching activities: $e");
     }
   }
@@ -151,6 +162,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 ElevatedButton(
                   onPressed: () async {
                     setState(() async {
+                      onLoading = true;
                       await widget.auth.signOut();
                     });
                   },
@@ -223,17 +235,19 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   Widget activityBox(List<String> activityList, user) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: const Color(0xB2FFFFFF),
-      ),
-      child: activityList.isNotEmpty
-          ? activityBoxListed(activityList)
-          : activityBoxUnlisted(user),
-    );
+    return onLoading
+        ? Center(heightFactor: 10, child: CircularProgressIndicator())
+        : Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xB2FFFFFF),
+            ),
+            child: activityList.isNotEmpty
+                ? activityBoxListed(activityList)
+                : activityBoxUnlisted(user),
+          );
   }
 
   Padding activityBoxUnlisted(User user) {
@@ -241,7 +255,7 @@ class _ActivityPageState extends State<ActivityPage> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Text(
+          const Text(
             textAlign: TextAlign.center,
             "Setup your today's activity and let AI determine for the right time",
             style: TextStyle(),
@@ -337,18 +351,15 @@ class _ActivityPageState extends State<ActivityPage> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width - 150,
-                      child: Text(
-                        // "${activityList[index].time}, ${activityList[index].desc}",
-                        "${activityList[index]}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          // color: activityList[index].isAI
-                          //     ? Colors.green
-                          //     : const Color(0xFF1D1B20),
-                        ),
+                    Text(
+                      // "${activityList[index].time}, ${activityList[index].desc}",
+                      activityList[index],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        // color: activityList[index].isAI
+                        //     ? Colors.green
+                        //     : const Color(0xFF1D1B20),
                       ),
                     )
 
