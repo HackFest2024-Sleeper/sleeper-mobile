@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeper_flutter/ui/pages/sleep/alarn_page.dart';
+import 'package:sleeper_flutter/ui/pages/sleep/alarm_page.dart';
 import 'package:sleeper_flutter/ui/pages/sleep/bulb_page.dart';
 
 class SleepPage extends StatefulWidget {

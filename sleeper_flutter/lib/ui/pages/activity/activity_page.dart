@@ -364,10 +364,10 @@ class _ActivityPageState extends State<ActivityPage> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(Icons.auto_awesome),
-                    ),
+                    // InkWell(
+                    //   onTap: () {},
+                    //   child: Icon(Icons.auto_awesome),
+                    // ),
 
                     // activityList[index].alarm
                     //     ? const Icon(Icons.alarm_on_outlined,
