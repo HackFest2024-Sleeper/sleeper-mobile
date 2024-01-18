@@ -11,6 +11,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool onLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,100 +116,105 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              margin: const EdgeInsets.only(top: 20),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 16),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: 1),
-                      ),
-                    ),
-                    alignment: Alignment.centerLeft,
+            onLoading
+                ? Center(child: CircularProgressIndicator())
+                : Container(
                     width: double.infinity,
-                    height: 56,
-                    child: const Text(
-                      'Account details',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1D1B20),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 16),
                     decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: 1),
-                      ),
+                      color: Colors.white,
                     ),
-                    alignment: Alignment.centerLeft,
-                    width: double.infinity,
-                    height: 56,
-                    child: const Text(
-                      'Setting',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1D1B20),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 16),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: 1),
-                      ),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    width: double.infinity,
-                    height: 56,
-                    child: const Text(
-                      'Help',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1D1B20),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      setState(() async {
-                        await widget.auth.signOut();
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(left: 16),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(width: 1),
+                    margin: const EdgeInsets.only(top: 20),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(left: 16),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(width: 1),
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          height: 56,
+                          child: const Text(
+                            'Account details',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF1D1B20),
+                            ),
+                          ),
                         ),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      width: double.infinity,
-                      height: 56,
-                      child: const Text(
-                        'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF1D1B20),
+                        Container(
+                          padding: EdgeInsets.only(left: 16),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(width: 1),
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          height: 56,
+                          child: const Text(
+                            'Setting',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF1D1B20),
+                            ),
+                          ),
                         ),
-                      ),
+                        Container(
+                          padding: EdgeInsets.only(left: 16),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(width: 1),
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          height: 56,
+                          child: const Text(
+                            'Help',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF1D1B20),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            setState(() {
+                              onLoading = true;
+                            });
+                            await widget.auth
+                                .signOut()
+                                .then((value) => {Navigator.pop(context)});
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 16),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(width: 1),
+                              ),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            width: double.infinity,
+                            height: 56,
+                            child: const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF1D1B20),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )
+                  )
           ],
         ),
       ),
