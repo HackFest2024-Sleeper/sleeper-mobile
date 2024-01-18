@@ -1,3 +1,5 @@
+![UI](https://github.com/HackFest2024-Sleeper/sleeper-mobile/assets/126906980/dadd1051-988b-4b8c-9af7-4907e40f79a9)
+
 # Sleeper Mobile
 
 Welcome to the Sleeper Mobile repository! This project serves as the frontend for the Sleeper mobile application, providing the necessary UI and UX functionality.
