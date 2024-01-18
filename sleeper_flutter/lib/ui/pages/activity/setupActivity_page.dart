@@ -24,7 +24,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
   }
 
   final String date = dateOnly(DateTime.now());
-
+  bool onLoading = false;
   bool isButtonDisabled = false;
   bool fixedTime = true;
   List<dynamic> activityList = [];
@@ -159,6 +159,9 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
       DateTime date = DateTime.now();
       String uid = FirebaseAuth.instance.currentUser!.uid;
       print('save');
+      setState(() {
+        onLoading = true;
+      });
       await recommendationController.createActivitiesRecommendation(
         uid,
         date,
@@ -186,7 +189,7 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "Setup today's activity",
           style: TextStyle(
               fontSize: 30, fontWeight: FontWeight.w300, color: Colors.white),
@@ -202,96 +205,99 @@ class _SetupActivityPageState extends State<SetupActivityPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(vertical: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xB2FFFFFF),
-              ),
-              child: Column(
+        child: onLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Add your activities',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF403041),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          addActivityDialog(context);
-                        },
-                        child: const Text('Add'),
-                      ),
-                    ],
-                  ),
-                  const Divider(thickness: 2, color: Colors.white),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 300,
+                  Container(
                     width: double.infinity,
-                    child: ListView.builder(
-                      itemCount: activityList.length,
-                      itemBuilder: (context, index) {
-                        final dynamic activityData = activityList[index];
-                        return Row(
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xB2FFFFFF),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text(
-                                activityData['name'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF1D1B20),
-                                ),
+                            const Text(
+                              'Add your activities',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF403041),
                               ),
                             ),
-                            const SizedBox(width: 2),
-                            Text(
-                              '${activityData['duration']} min',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF1D1B20),
-                              ),
-                            ),
-                            Text(
-                              ', Priority: ${activityData['priority']}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF1D1B20),
-                              ),
+                            ElevatedButton(
+                              onPressed: () {
+                                addActivityDialog(context);
+                              },
+                              child: const Text('Add'),
                             ),
                           ],
-                        );
-                      },
+                        ),
+                        const Divider(thickness: 2, color: Colors.white),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 300,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            itemCount: activityList.length,
+                            itemBuilder: (context, index) {
+                              final dynamic activityData = activityList[index];
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      activityData['name'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF1D1B20),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${activityData['duration']} min',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF1D1B20),
+                                    ),
+                                  ),
+                                  Text(
+                                    ', Priority: ${activityData['priority']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF1D1B20),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
-                  )
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(
+                        () {
+                          createRecommendationBasedActivities();
+                        },
+                      );
+                    },
+                    child: const Text('Save'),
+                  ),
                 ],
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(
-                  () {
-                    createRecommendationBasedActivities();
-                  },
-                );
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        ),
       ),
     );
   }
