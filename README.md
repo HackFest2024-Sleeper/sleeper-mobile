@@ -29,9 +29,9 @@ flutter pub get
 flutter run
 ```
 
-## Bug Notices
+## Want to test our mobile app? 
 
-**Important:**
-
-- The current version of Sleeper Mobile may have some known bugs that we are actively working on addressing.
-- How to change page? You can set it in our login_page.dart file -> search ```int menuIndex = 3; //0 to 4``` -> change it based on what page you want to.
+You can download our built package below!
+```bash
+https://drive.google.com/file/d/1zAvuTuHBZFFnGDUWZWxON_6KDj6ZcHjG/view?usp=sharing
+```
